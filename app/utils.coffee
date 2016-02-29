@@ -22,10 +22,13 @@ extensions =
 ## mx.boundComponent
 
 mx.boundComponent = (component, attrs, children) ->
-  controller: ->
-    new component.controller attrs, children
-  view: (ctlr) ->
-    component.view ctlr, attrs, children
+  bound =
+    view: (ctlr) -> component.view ctlr, attrs, children
+
+  if component.controller?
+    bound.controller = -> new component.controller attrs, children
+
+  bound
 
 
 ## mx.select
