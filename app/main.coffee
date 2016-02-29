@@ -56,7 +56,8 @@ App =
         completed: store.all 'completed'
 
     [
-      m.component Header, onNew: store.addTodo
+      m.component Header, {},
+        m.component NewTodo, onNew: store.addTodo
 
       if state.todos.all.length > 0
         [
@@ -75,6 +76,14 @@ App =
 
 
 Header =
+  view: (ctlr, attrs, children) ->
+    m 'header.header', [
+      m 'h1', 'todos'
+      children
+    ]
+
+
+NewTodo =
   controller: ({onNew}) ->
     title = m.prop ''
 
@@ -86,14 +95,11 @@ Header =
           title ''
 
   view: (ctlr) ->
-    m 'header.header', [
-      m 'h1', 'todos'
-      mx 'input.new-todo',
-        placeholder: 'What needs to be done?'
-        autofocus: true
-        binds: ['oninput', 'value', ctlr.title]
-        onkeydown: ctlr.handleKeydown
-    ]
+    mx 'input.new-todo',
+      placeholder: 'What needs to be done?'
+      autofocus: true
+      binds: ['oninput', 'value', ctlr.title]
+      onkeydown: ctlr.handleKeydown
 
 
 Main =
