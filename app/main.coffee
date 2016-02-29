@@ -56,19 +56,19 @@ App =
         completed: store.all 'completed'
 
     [
-      m.component Header, {},
-        m.component NewTodo, onNew: store.addTodo
+      m Header, {},
+        m NewTodo, onNew: store.addTodo
 
       if state.todos.all.length > 0
         [
-          m.component Main,
+          m Main,
             state: state
             onToggleAll: store.toggleAllTodos
             onToggle: store.toggleTodo
             onEdit: store.renameTodo
             onDestroy: store.removeTodo
 
-          m.component Footer,
+          m Footer,
             state: state
             onClearCompleted: store.removeCompletedTodos
         ]
@@ -113,7 +113,7 @@ Main =
       m 'label', for: 'toggle-all', 'Mark all as complete'
 
       m 'ul.todo-list', state.todos[state.filter].map (todo) ->
-        m.component Item, {todo, onToggle, onEdit, onDestroy}
+        m Item, {todo, onToggle, onEdit, onDestroy}
     ]
 
 
