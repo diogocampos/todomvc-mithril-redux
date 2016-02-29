@@ -112,8 +112,9 @@ Main =
 
       m 'label', for: 'toggle-all', 'Mark all as complete'
 
-      m 'ul.todo-list', state.todos[state.filter].map (todo) ->
-        m Item, {todo, onToggle, onEdit, onDestroy}
+      m 'ul.todo-list',
+        for todo in state.todos[state.filter]
+          m Item, {todo, onToggle, onEdit, onDestroy}
     ]
 
 
@@ -182,14 +183,15 @@ Footer =
         if activeCount is 1 then ' item left' else ' items left'
       ]
 
-      m 'ul.filters', FILTERS.map (filter) ->
-        m 'li', [
-          m 'a',
-            class: if state.filter is filter.name then 'selected'
-            href: filter.href
-            config: m.route
-            filter.label
-        ]
+      m 'ul.filters',
+        for filter in FILTERS
+          m 'li', [
+            m 'a',
+              class: if state.filter is filter.name then 'selected'
+              href: filter.href
+              config: m.route
+              filter.label
+          ]
 
       if completedCount > 0
         m 'button.clear-completed', onclick: onClearCompleted, 'Clear completed'
