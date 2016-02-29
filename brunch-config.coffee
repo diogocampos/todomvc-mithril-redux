@@ -10,3 +10,6 @@ exports.config =
     styles:
       'todomvc-common': ['base.css']
       'todomvc-app-css': ['index.css']
+
+  server:
+    hostname: '0.0.0.0'
