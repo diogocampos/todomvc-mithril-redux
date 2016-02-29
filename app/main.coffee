@@ -26,17 +26,19 @@ FILTERS = table [
 
 init = ->
   rootElement = document.getElementById 'todoapp'
+
+  store = boundMethods new TodoStore STORE_KEY
+  app = mx.boundComponent App, {store}
+
   m.route.mode = 'hash'
   m.route rootElement, '/',
-    '/': App
-    '/:filter': App
+    '/': app
+    '/:filter': app
 
 
 ## Mithril Components
 
-App = do ->
-  todoStore = boundMethods new TodoStore STORE_KEY
-
+App =
   controller: ->
     filter = m.route.param 'filter'
     unless filter in ['active', 'completed']
@@ -45,29 +47,29 @@ App = do ->
 
     {filter}
 
-  view: (ctlr) ->
+  view: (ctlr, {store}) ->
     state =
       filter: ctlr.filter
       todos:
-        all: todoStore.all()
-        active: todoStore.all 'active'
-        completed: todoStore.all 'completed'
+        all: store.all()
+        active: store.all 'active'
+        completed: store.all 'completed'
 
     [
-      m.component Header, onNew: todoStore.addTodo
+      m.component Header, onNew: store.addTodo
 
       if state.todos.all.length > 0
         [
           m.component Main,
             state: state
-            onToggleAll: todoStore.toggleAllTodos
-            onToggle: todoStore.toggleTodo
-            onEdit: todoStore.renameTodo
-            onDestroy: todoStore.removeTodo
+            onToggleAll: store.toggleAllTodos
+            onToggle: store.toggleTodo
+            onEdit: store.renameTodo
+            onDestroy: store.removeTodo
 
           m.component Footer,
             state: state
-            onClearCompleted: todoStore.removeCompletedTodos
+            onClearCompleted: store.removeCompletedTodos
         ]
     ]
 

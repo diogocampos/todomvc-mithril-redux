@@ -19,6 +19,15 @@ extensions =
     delete attrs.binds
 
 
+## mx.boundComponent
+
+mx.boundComponent = (component, attrs, children) ->
+  controller: ->
+    new component.controller attrs, children
+  view: (ctlr) ->
+    component.view ctlr, attrs, children
+
+
 ## mx.select
 
 mx.select = (element, isInitialized, context) ->
