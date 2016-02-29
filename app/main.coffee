@@ -50,16 +50,15 @@ App =
   view: (ctlr, {store}) ->
     state =
       filter: ctlr.filter
-      todos:
-        all: store.all()
-        active: store.all 'active'
-        completed: store.all 'completed'
+      all: todos: store.all()
+      active: todos: store.all 'active'
+      completed: todos: store.all 'completed'
 
     [
       m Header, {},
         m NewTodo, onNew: store.addTodo
 
-      if state.todos.all.length > 0
+      if state.all.todos.length > 0
         [
           m Main,
             state: state
@@ -107,13 +106,13 @@ Main =
     m 'section.main', [
       m 'input#toggle-all.toggle-all',
         type: 'checkbox'
-        checked: state.todos.active.length is 0 and state.todos.all.length > 0
+        checked: state.active.todos.length is 0 and state.all.todos.length > 0
         onchange: onToggleAll
 
       m 'label', for: 'toggle-all', 'Mark all as complete'
 
       m 'ul.todo-list',
-        for todo in state.todos[state.filter]
+        for todo in state[state.filter].todos
           m Item, {todo, onToggle, onEdit, onDestroy}
     ]
 
@@ -174,8 +173,8 @@ Item =
 
 Footer =
   view: (ctlr, {state, onClearCompleted}) ->
-    activeCount = state.todos.active.length
-    completedCount = state.todos.completed.length
+    activeCount = state.active.todos.length
+    completedCount = state.completed.todos.length
 
     m 'footer.footer', [
       m 'span.todo-count', [
