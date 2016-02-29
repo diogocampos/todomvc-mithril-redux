@@ -39,7 +39,8 @@ class TodoStore
     unless @_cached
       @_cached = all: @_todos, active: [], completed: []
       for todo in @_todos
-        @_cached[if todo.completed then 'completed' else 'active'].push todo
+        status = if todo.completed then 'completed' else 'active'
+        @_cached[status].push todo
     @_cached[filter]
 
   findById: (id) ->
