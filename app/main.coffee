@@ -3,7 +3,7 @@
 m = require 'mithril'
 
 TodoStore = require './todo-store'
-{mx, boundMethods, table} = require './utils'
+{bindComponent, bindMethods, table} = require './utils'
 
 NewTodoInput = require './components/new-todo-input'
 TodoItem = require './components/todo-item'
@@ -27,7 +27,7 @@ init = ->
   rootElement = document.getElementById 'todoapp'
 
   store = boundMethods new TodoStore STORE_KEY
-  app = mx.boundComponent App, {store}
+  app = bindComponent App, {store}
 
   m.route.mode = 'hash'
   m.route rootElement, '/',

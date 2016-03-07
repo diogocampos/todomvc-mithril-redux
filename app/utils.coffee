@@ -27,28 +27,29 @@ extensions =
     delete attrs.binds
 
 
-## mx.boundComponent
-
-mx.boundComponent = (component, attrs, children) ->
-  bound =
-    view: (ctlr) -> component.view ctlr, attrs, children
-
-  if component.controller?
-    bound.controller = -> new component.controller attrs, children
-
-  bound
-
-
 ## mx.select
 
 mx.select = (element, isInitialized, context) ->
   element.select() unless isInitialized
 
 
-## boundMethods
+## bindComponent
 
-exports.boundMethods =
-boundMethods = (obj) ->
+exports.bindComponent =
+bindComponent = (component, attrs, children) ->
+  bound =
+    view: (ctlr) -> component.view ctlr, attrs, children
+
+  if component.controller
+    bound.controller = -> new component.controller attrs, children
+
+  bound
+
+
+## bindMethods
+
+exports.bindMethods =
+bindMethods = (obj) ->
   methods = {}
   for key, fn of obj when typeof fn is 'function'
     methods[key] = fn.bind obj
