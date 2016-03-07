@@ -3,6 +3,17 @@
 
 module.exports =
 
+  ## actionCreator
+
+  actionCreator: (type, keys...) -> (values...) ->
+    action = {type}
+    for key, index in keys
+      action[key] = values[index]
+    action
+
+
+  ## UUIDv4
+
   UUIDv4: do ->
     sectionLengths = [8, 4, 4, 4, 12]
     versionSectionIndex = 2
