@@ -1,6 +1,6 @@
 'use strict'
 
-{table} = require './utils'
+{table, UUIDv4} = require './utils'
 
 
 ## Constants
@@ -49,7 +49,7 @@ class TodoStore
     [null, -1]
 
   addTodo: ({title, completed = false}) ->
-    todo = {id: uniqueId(), title, completed}
+    todo = {id: UUIDv4(), title, completed}
     @_todos.push todo
     @_save()
 
@@ -80,9 +80,3 @@ class TodoStore
   removeCompletedTodos: ->
     @_todos = @all 'active'
     @_save()
-
-
-## Helpers
-
-uniqueId = ->
-  "#{Date.now()}#{Math.random()}"
