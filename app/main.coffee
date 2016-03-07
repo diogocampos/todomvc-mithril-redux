@@ -1,6 +1,7 @@
 'use strict'
 
 m = require 'mithril'
+{bindActionCreators} = require 'redux'
 
 {bindComponent, table} = require './utils'
 
@@ -52,6 +53,8 @@ App =
     {dispatch, getState} = store
     {todos} = getState()
 
+    bound = bindActionCreators actions, dispatch
+
     state =
       filter: ctlr.filter
       all: todos: todos
@@ -60,20 +63,20 @@ App =
 
     [
       header title: 'todos',
-        m NewTodoInput, onNew: (title) -> dispatch actions.createTodo title
+        m NewTodoInput, onNew: bound.createTodo
 
       if state.all.todos.length > 0
         [
           m Main,
             state: state
-            onToggle: (id) -> dispatch actions.toggleTodo id
-            onRename: (id, title) -> dispatch actions.renameTodo id, title
-            onDestroy: (id) -> dispatch actions.destroyTodo id
-            onToggleAll: -> dispatch actions.toggleAllTodos()
+            onToggle: bound.toggleTodo
+            onRename: bound.renameTodo
+            onDestroy: bound.destroyTodo
+            onToggleAll: bound.toggleAllTodos
 
           m Footer,
             state: state
-            onClearCompleted: -> dispatch actions.destroyCompletedTodos()
+            onClearCompleted: bound.destroyCompletedTodos
         ]
     ]
 
