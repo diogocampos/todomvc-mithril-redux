@@ -53,12 +53,6 @@ class TodoStore
     @_todos.push todo
     @_save()
 
-  toggleAllTodos: ->
-    if @_todos.length > 0
-      hasActive = @all('active').length > 0
-      todo.completed = hasActive for todo in @_todos
-      @_save()
-
   toggleTodo: ({id}) ->
     [todo, index] = @findById id
     if todo?
@@ -75,6 +69,12 @@ class TodoStore
     [todo, index] = @findById id
     if todo?
       @_todos.splice index, 1
+      @_save()
+
+  toggleAllTodos: ->
+    if @_todos.length > 0
+      hasActive = @all('active').length > 0
+      todo.completed = hasActive for todo in @_todos
       @_save()
 
   removeCompletedTodos: ->
