@@ -3,9 +3,10 @@
 m = require 'mithril'
 
 TodoStore = require './todo-store'
-{KeyCode, mx, boundMethods, table} = require './utils'
+{mx, boundMethods, table} = require './utils'
 
 NewTodoInput = require './components/new-todo-input'
+TodoItem = require './components/todo-item'
 
 
 ## Constants
@@ -60,10 +61,10 @@ App =
         [
           m Main,
             state: state
+            onToggle: (id) -> store.toggleTodo {id}
+            onRename: (id, title) -> store.renameTodo {id, title}
+            onDestroy: (id) -> store.removeTodo {id}
             onToggleAll: store.toggleAllTodos
-            onToggle: store.toggleTodo
-            onEdit: store.renameTodo
-            onDestroy: store.removeTodo
 
           m Footer,
             state: state
@@ -80,7 +81,7 @@ header = ({title}, children) ->
 
 
 Main =
-  view: (ctlr, {state, onToggleAll, onToggle, onEdit, onDestroy}) ->
+  view: (ctlr, {state, onToggleAll, onToggle, onRename, onDestroy}) ->
     m 'section.main', [
       m 'input#toggle-all.toggle-all',
         type: 'checkbox'
@@ -91,61 +92,7 @@ Main =
 
       m 'ul.todo-list',
         for todo in state[state.filter].todos
-          m Item, {todo, onToggle, onEdit, onDestroy}
-    ]
-
-
-Item =
-  controller: ({todo, onToggle, onEdit, onDestroy}) ->
-    title = m.prop todo.title
-    editing = m.prop false
-
-    commitChanges = ->
-      editing false
-      if newTitle = title().trim()
-        onEdit id: todo.id, title: newTitle unless newTitle is todo.title
-      else
-        onDestroy id: todo.id
-
-    discardChanges = ->
-      title todo.title
-      editing false
-
-    title: title
-    editing: editing
-
-    handleToggle: -> onToggle id: todo.id
-    handleDestroy: -> onDestroy id: todo.id
-
-    handleDblclick: -> editing true
-    handleBlur: commitChanges
-
-    handleKeydown: (event) ->
-      switch event.keyCode
-        when KeyCode.ENTER then commitChanges()
-        when KeyCode.ESCAPE then discardChanges()
-
-  view: (ctlr, {todo}) ->
-    classes = ''
-    classes += '.editing' if ctlr.editing()
-    classes += '.completed' if todo.completed
-
-    m "li#{classes}", key: todo.id, [
-      if not ctlr.editing()
-        m 'div.view', [
-          m 'input.toggle',
-            type: 'checkbox'
-            checked: todo.completed
-            onchange: ctlr.handleToggle
-          m 'label', ondblclick: ctlr.handleDblclick, todo.title
-          m 'button.destroy', onclick: ctlr.handleDestroy
-        ]
-      else
-        mx 'input.edit',
-          config: mx.select
-          binds: ['oninput', 'value', ctlr.title]
-          onblur: ctlr.handleBlur
-          onkeydown: ctlr.handleKeydown
+          m TodoItem, {todo, onToggle, onRename, onDestroy}
     ]
 
 
