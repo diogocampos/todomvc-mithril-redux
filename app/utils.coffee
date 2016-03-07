@@ -3,6 +3,14 @@
 m = require 'mithril'
 
 
+## KeyCode
+
+exports.KeyCode =
+KeyCode =
+  ENTER: 13
+  ESCAPE: 27
+
+
 ## mx
 
 exports.mx =
