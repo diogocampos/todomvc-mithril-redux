@@ -56,7 +56,7 @@ App =
 
     [
       header title: 'todos',
-        m NewTodo, onNew: store.addTodo
+        m NewTodoInput, onNew: (title) -> store.addTodo {title}
 
       if state.all.todos.length > 0
         [
@@ -81,7 +81,7 @@ header = ({title}, children) ->
   ]
 
 
-NewTodo =
+NewTodoInput =
   controller: ({onNew}) ->
     title = m.prop ''
 
@@ -89,7 +89,7 @@ NewTodo =
     handleKeydown: (event) ->
       if event.keyCode is KeyCode.ENTER
         if newTitle = title().trim()
-          onNew title: newTitle
+          onNew newTitle
           title ''
 
   view: (ctlr) ->
