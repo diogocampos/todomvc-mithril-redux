@@ -55,7 +55,7 @@ App =
       completed: todos: store.all 'completed'
 
     [
-      m Header, {},
+      m Header,
         m NewTodo, onNew: store.addTodo
 
       if state.all.todos.length > 0
@@ -75,7 +75,7 @@ App =
 
 
 Header =
-  view: (ctlr, attrs, children) ->
+  view: (ctlr, children) ->
     m 'header.header', [
       m 'h1', 'todos'
       children
