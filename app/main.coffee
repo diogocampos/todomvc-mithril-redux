@@ -2,11 +2,13 @@
 
 m = require 'mithril'
 
-TodoStore = require './todo-store'
-{bindComponent, bindMethods, table} = require './utils'
+{bindComponent, table} = require './utils'
 
 NewTodoInput = require './components/new-todo-input'
 TodoItem = require './components/todo-item'
+
+configureStore = require './state/store'
+{actions, Todo} = require './state/todos'
 
 
 ## Constants
@@ -26,7 +28,7 @@ FILTERS = table [
 init = ->
   rootElement = document.getElementById 'todoapp'
 
-  store = boundMethods new TodoStore STORE_KEY
+  store = configureStore()
   app = bindComponent App, {store}
 
   m.route.mode = 'hash'
@@ -47,28 +49,31 @@ App =
     {filter}
 
   view: (ctlr, {store}) ->
+    {dispatch, getState} = store
+    {todos} = getState()
+
     state =
       filter: ctlr.filter
-      all: todos: store.all()
-      active: todos: store.all 'active'
-      completed: todos: store.all 'completed'
+      all: todos: todos
+      active: todos: todos.filter Todo.isActive
+      completed: todos: todos.filter Todo.isCompleted
 
     [
       header title: 'todos',
-        m NewTodoInput, onNew: (title) -> store.addTodo {title}
+        m NewTodoInput, onNew: (title) -> dispatch actions.createTodo title
 
       if state.all.todos.length > 0
         [
           m Main,
             state: state
-            onToggle: (id) -> store.toggleTodo {id}
-            onRename: (id, title) -> store.renameTodo {id, title}
-            onDestroy: (id) -> store.removeTodo {id}
-            onToggleAll: store.toggleAllTodos
+            onToggle: (id) -> dispatch actions.toggleTodo id
+            onRename: (id, title) -> dispatch actions.renameTodo id, title
+            onDestroy: (id) -> dispatch actions.destroyTodo id
+            onToggleAll: -> dispatch actions.toggleAllTodos()
 
           m Footer,
             state: state
-            onClearCompleted: store.removeCompletedTodos
+            onClearCompleted: -> dispatch actions.destroyCompletedTodos()
         ]
     ]
 

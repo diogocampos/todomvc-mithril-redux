@@ -5,6 +5,7 @@
 
 ## Models
 
+exports.Todo =
 Todo = (title, completed) ->
   id: UUIDv4()
   title: title
@@ -12,6 +13,9 @@ Todo = (title, completed) ->
 
 Todo.isActive = (todo) ->
   not todo.completed
+
+Todo.isCompleted = (todo) ->
+  !!todo.completed
 
 
 ## Action Creators
