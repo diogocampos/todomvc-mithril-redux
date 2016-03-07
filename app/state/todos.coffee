@@ -38,10 +38,10 @@ exports.actions = {
 
 ## Reducer
 
-initialTodos = Todo(args...) for args in [
+initialTodos = (Todo(args...) for args in [
   ['Taste JavaScript', true]
   ['Buy a unicorn', false]
-]
+])
 
 exports.reducer = (todos = initialTodos, action) ->
   nextTodos = switch action.type
@@ -50,13 +50,13 @@ exports.reducer = (todos = initialTodos, action) ->
       todos.concat [action.todo]
 
     when 'TOGGLE_TODO'
-      [todo, index] = findTodoById action.id
+      [todo, index] = findTodoById todos, action.id
       if todo
         todo = assign todo, completed: not todo.completed
         setItem todos, index, todo
 
     when 'RENAME_TODO'
-      [todo, index] = findTodoById action.id
+      [todo, index] = findTodoById todos, action.id
       if todo
         todo = assign todo, title: action.title
         setItem todos, index, todo
@@ -72,3 +72,9 @@ exports.reducer = (todos = initialTodos, action) ->
       todos.filter Todo.isActive
 
   nextTodos or todos
+
+
+findTodoById = (todos, id) ->
+  for todo, index in todos
+    return [todo, index] if todo.id is id
+  [null, -1]
