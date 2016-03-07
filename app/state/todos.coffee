@@ -1,6 +1,6 @@
 'use strict'
 
-{actionCreator, UUIDv4} = require './utils'
+{actionCreator, assign, setItem, UUIDv4} = require './utils'
 
 
 ## Models
@@ -9,6 +9,9 @@ Todo = (title, completed) ->
   id: UUIDv4()
   title: title
   completed: completed ? false
+
+Todo.isActive = (todo) ->
+  not todo.completed
 
 
 ## Action Creators
@@ -31,3 +34,41 @@ exports.actions = {
   createTodo, toggleTodo, renameTodo, destroyTodo
   toggleAllTodos, destroyCompletedTodos
 }
+
+
+## Reducer
+
+initialTodos = Todo(args...) for args in [
+  ['Taste JavaScript', true]
+  ['Buy a unicorn', false]
+]
+
+exports.reducer = (todos = initialTodos, action) ->
+  nextTodos = switch action.type
+
+    when 'ADD_TODO'
+      todos.concat [action.todo]
+
+    when 'TOGGLE_TODO'
+      [todo, index] = findTodoById action.id
+      if todo
+        todo = assign todo, completed: not todo.completed
+        setItem todos, index, todo
+
+    when 'RENAME_TODO'
+      [todo, index] = findTodoById action.id
+      if todo
+        todo = assign todo, title: action.title
+        setItem todos, index, todo
+
+    when 'DESTROY_TODO'
+      todos.filter (todo) -> todo.id isnt action.id
+
+    when 'TOGGLE_ALL_TODOS'
+      hasActiveTodos = todos.filter(Todo.isActive).length > 0
+      todos.map (todo) -> assign todo, completed: hasActiveTodos
+
+    when 'DESTROY_COMPLETED_TODOS'
+      todos.filter Todo.isActive
+
+  nextTodos or todos
