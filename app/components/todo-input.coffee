@@ -6,16 +6,16 @@ m = require 'mithril'
 
 
 module.exports =
-NewTodoInput =
+TodoInput =
 
-  controller: ({onNew}) ->
+  controller: ({onSubmit}) ->
     title = m.prop ''
 
     title: title
     handleKeydown: (event) ->
       if event.keyCode is KeyCode.ENTER
         if newTitle = title().trim()
-          onNew newTitle
+          onSubmit newTitle
           title ''
 
   view: (ctlr) ->

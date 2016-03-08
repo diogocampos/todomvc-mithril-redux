@@ -5,7 +5,7 @@ m = require 'mithril'
 
 {bindComponent, connectComponent} = require './mithril-redux'
 
-NewTodoInput = require './components/new-todo-input'
+TodoInput = require './components/todo-input'
 TodoItem = require './components/todo-item'
 
 configureStore = require './state/store'
@@ -60,7 +60,7 @@ App = connectComponent
 
     [
       header title: 'todos',
-        m NewTodoInput, onNew: ctlr.createTodo
+        m TodoInput, onSubmit: ctlr.createTodo
 
       if state.all.todos.length > 0
         [
@@ -78,7 +78,6 @@ App = connectComponent
             filter: state.filter
             activeCount: state.active.todos.length
             completedCount: state.completed.todos.length
-
             onClearCompleted: ctlr.destroyCompletedTodos
         ]
     ]
