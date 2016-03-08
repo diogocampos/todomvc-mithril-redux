@@ -61,8 +61,8 @@ App =
 
       if todos.length > 0
         [
-          m TodoList, {state, actions}
-          m Footer, {state, actions}
+          todoList {state, actions}
+          footer {state, actions}
         ]
     ]
 
@@ -74,56 +74,54 @@ header = ({title}, children) ->
   ]
 
 
-TodoList =
-  view: (_, {state, actions}) ->
-    allCompleted = s.areAllTodosCompleted state
-    visibleTodos = s.getVisibleTodos state
+todoList = ({state, actions}) ->
+  allCompleted = s.areAllTodosCompleted state
+  visibleTodos = s.getVisibleTodos state
 
-    m 'section.main', [
-      m 'input#toggle-all.toggle-all',
-        type: 'checkbox'
-        checked: allCompleted
-        onchange: actions.toggleAllTodos
+  m 'section.main', [
+    m 'input#toggle-all.toggle-all',
+      type: 'checkbox'
+      checked: allCompleted
+      onchange: actions.toggleAllTodos
 
-      m 'label', for: 'toggle-all', 'Mark all as complete'
+    m 'label', for: 'toggle-all', 'Mark all as complete'
 
-      m 'ul.todo-list',
-        for todo in visibleTodos
-          m TodoItem,
-            todo: todo
-            onToggle: actions.toggleTodo
-            onRename: actions.renameTodo
-            onDestroy: actions.destroyTodo
+    m 'ul.todo-list',
+      for todo in visibleTodos
+        m TodoItem,
+          todo: todo
+          onToggle: actions.toggleTodo
+          onRename: actions.renameTodo
+          onDestroy: actions.destroyTodo
+  ]
+
+
+footer = ({state, actions}) ->
+  currentFilter = s.getFilter state
+  activeTodos = s.getActiveTodos state
+  completedTodos = s.getCompletedTodos state
+
+  m 'footer.footer', [
+    m 'span.todo-count', [
+      m 'strong', activeTodos.length
+      if activeTodos.length is 1 then ' item left' else ' items left'
     ]
 
+    m 'ul.filters',
+      for args in FILTERS
+        m 'li', [
+          m 'a',
+            class: if args.name is currentFilter then 'selected'
+            href: args.href
+            config: m.route
+            args.label
+        ]
 
-Footer =
-  view: (_, {state, actions}) ->
-    currentFilter = s.getFilter state
-    activeTodos = s.getActiveTodos state
-    completedTodos = s.getCompletedTodos state
-
-    m 'footer.footer', [
-      m 'span.todo-count', [
-        m 'strong', activeTodos.length
-        if activeTodos.length is 1 then ' item left' else ' items left'
-      ]
-
-      m 'ul.filters',
-        for args in FILTERS
-          m 'li', [
-            m 'a',
-              class: if args.name is currentFilter then 'selected'
-              href: args.href
-              config: m.route
-              args.label
-          ]
-
-      if completedTodos.length > 0
-        m 'button.clear-completed',
-          onclick: actions.destroyCompletedTodos,
-          'Clear completed'
-    ]
+    if completedTodos.length > 0
+      m 'button.clear-completed',
+        onclick: actions.destroyCompletedTodos,
+        'Clear completed'
+  ]
 
 
 ## Launch
