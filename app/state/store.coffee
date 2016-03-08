@@ -1,17 +1,15 @@
 'use strict'
 
-{applyMiddleware, combineReducers, createStore} = require 'redux'
+{applyMiddleware, createStore} = require 'redux'
 thunk = require('redux-thunk').default
 
-todos = require './todos'
+root = require './root'
 
 
-rootReducer = combineReducers
-  todos: todos.reducer
 
-module.exports =
-configureStore = (initialState) ->
-  createStore rootReducer, initialState,
+
+module.exports = (initialState) ->
+  createStore root.reducer, initialState,
     applyMiddleware(
       thunk
     )

@@ -8,6 +8,7 @@ TodoItem = require './components/todo-item'
 {bindComponent} = require './components/utils'
 
 configureStore = require './state/store'
+{setFilter} = require('./state/filter').actions
 {actions, Todo} = require './state/todos'
 
 
@@ -40,13 +41,14 @@ init = ->
 ## Mithril Components
 
 App =
-  controller: (store) ->
+  controller: ({dispatch}) ->
     filter = m.route.param 'filter'
     unless filter in ['active', 'completed']
       m.route '/' if filter
       filter = 'all'
 
-    ctlr = bindActionCreators actions, store.dispatch
+    dispatch setFilter filter
+    ctlr = bindActionCreators actions, dispatch
     ctlr.filter = filter
     ctlr
 
