@@ -16,16 +16,3 @@ bindComponent = (component, attrs, children) ->
   bound
 
 
-## table
-
-exports.table =
-table = ([keys, rows...]) ->
-  toObject = objectFactory keys
-  rows.map toObject
-
-objectFactory = (keys) ->
-  (values) ->
-    obj = {}
-    for key, index in keys
-      obj[key] = values[index]
-    obj

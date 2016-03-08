@@ -3,7 +3,7 @@
 m = require 'mithril'
 {bindActionCreators} = require 'redux'
 
-{bindComponent, table} = require './utils'
+{bindComponent} = require './utils'
 
 NewTodoInput = require './components/new-todo-input'
 TodoItem = require './components/todo-item'
@@ -16,11 +16,10 @@ configureStore = require './state/store'
 
 STORE_KEY = 'todos-mithril'
 
-FILTERS = table [
-  ['name'     , 'href'      , 'label'    ]
-  ['all'      , '/'         , 'All'      ]
-  ['active'   , '/active'   , 'Active'   ]
-  ['completed', '/completed', 'Completed']
+FILTERS = [
+  { name: 'all'      , href: '/'         , label: 'All'       }
+  { name: 'active'   , href: '/active'   , label: 'Active'    }
+  { name: 'completed', href: '/completed', label: 'Completed' }
 ]
 
 
