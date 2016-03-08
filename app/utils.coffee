@@ -9,11 +9,9 @@ module.exports =
   ## bindComponent
 
   bindComponent: (component, attrs, children) ->
-    bound =
+    wrapComponent component,
+      controller: -> new component.controller attrs, children
       view: (ctlr) -> component.view ctlr, attrs, children
-    if component.controller
-      bound.controller = -> new component.controller attrs, children
-    bound
 
 
   ## connectComponent
@@ -27,10 +25,18 @@ module.exports =
         attrs.dispatch = store.dispatch
         attrs
 
-      connected =
+      wrapComponent component,
+        controller: ({store}, children) ->
+          new component.controller getAttrs(store), children
         view: (ctlr, {store}, children) ->
           component.view ctlr, getAttrs(store), children
-      if component.controller
-        connected.controller = ({store}, children) ->
-          new component.controller getAttrs(store), children
-      connected
+
+
+## Helpers
+
+wrapComponent = (component, {controller, view}) ->
+  wrapped =
+    view: view or component.view
+  if component.controller
+    wrapped.controller = controller or component.controller
+  wrapped
