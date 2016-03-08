@@ -3,10 +3,9 @@
 m = require 'mithril'
 {bindActionCreators} = require 'redux'
 
-{bindComponent} = require './mithril-redux'
-
 TodoInput = require './components/todo-input'
 TodoItem = require './components/todo-item'
+{bindComponent} = require './components/utils'
 
 configureStore = require './state/store'
 {actions, Todo} = require './state/todos'
