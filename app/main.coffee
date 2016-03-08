@@ -64,8 +64,11 @@ App = connectComponent
 
       if state.all.todos.length > 0
         [
-          m Main,
-            state: state
+          m TodoList,
+            activeCount: state.active.todos.count
+            count: state.all.todos.count
+            visibleTodos: state[state.filter].todos
+
             onToggle: ctlr.toggleTodo
             onRename: ctlr.renameTodo
             onDestroy: ctlr.destroyTodo
@@ -75,6 +78,7 @@ App = connectComponent
             filter: state.filter
             activeCount: state.active.todos.length
             completedCount: state.completed.todos.length
+
             onClearCompleted: ctlr.destroyCompletedTodos
         ]
     ]
@@ -90,18 +94,21 @@ header = ({title}, children) ->
   ]
 
 
-Main =
-  view: (ctlr, {state, onToggleAll, onToggle, onRename, onDestroy}) ->
+TodoList =
+  view: (ctlr, attrs) ->
+    {activeCount, count, visibleTodos} = attrs
+    {onToggle, onRename, onDestroy, onToggleAll} = attrs
+
     m 'section.main', [
       m 'input#toggle-all.toggle-all',
         type: 'checkbox'
-        checked: state.active.todos.length is 0 and state.all.todos.length > 0
+        checked: activeCount is 0 and count > 0
         onchange: onToggleAll
 
       m 'label', for: 'toggle-all', 'Mark all as complete'
 
       m 'ul.todo-list',
-        for todo in state[state.filter].todos
+        for todo in visibleTodos
           m TodoItem, {todo, onToggle, onRename, onDestroy}
     ]
 
