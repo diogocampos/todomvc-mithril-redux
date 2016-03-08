@@ -72,7 +72,9 @@ App = connectComponent
             onToggleAll: ctlr.toggleAllTodos
 
           m Footer,
-            state: state
+            filter: state.filter
+            activeCount: state.active.todos.length
+            completedCount: state.completed.todos.length
             onClearCompleted: ctlr.destroyCompletedTodos
         ]
     ]
@@ -105,10 +107,7 @@ Main =
 
 
 Footer =
-  view: (ctlr, {state, onClearCompleted}) ->
-    activeCount = state.active.todos.length
-    completedCount = state.completed.todos.length
-
+  view: (ctlr, {filter, activeCount, completedCount, onClearCompleted}) ->
     m 'footer.footer', [
       m 'span.todo-count', [
         m 'strong', activeCount
@@ -116,13 +115,13 @@ Footer =
       ]
 
       m 'ul.filters',
-        for filter in FILTERS
+        for f in FILTERS
           m 'li', [
             m 'a',
-              class: if state.filter is filter.name then 'selected'
-              href: filter.href
+              class: if f.name is filter then 'selected'
+              href: f.href
               config: m.route
-              filter.label
+              f.label
           ]
 
       if completedCount > 0
