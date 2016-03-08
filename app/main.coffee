@@ -83,11 +83,8 @@ TodoList =
   view: (_, store, {onToggle, onRename, onDestroy, onToggleAll}) ->
     state = store.getState()
 
-    todos = s.getTodos state
-    activeTodos = s.getActiveTodos state
+    allCompleted = s.areAllTodosCompleted state
     visibleTodos = s.getVisibleTodos state
-
-    allCompleted = todos.length > 0 and activeTodos.length is 0
 
     m 'section.main', [
       m 'input#toggle-all.toggle-all',
