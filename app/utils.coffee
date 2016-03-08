@@ -40,16 +40,6 @@ bindComponent = (component, attrs, children) ->
   bound
 
 
-## bindMethods
-
-exports.bindMethods =
-bindMethods = (obj) ->
-  methods = {}
-  for key, fn of obj when typeof fn is 'function'
-    methods[key] = fn.bind obj
-  methods
-
-
 ## table
 
 exports.table =
@@ -63,23 +53,3 @@ objectFactory = (keys) ->
     for key, index in keys
       obj[key] = values[index]
     obj
-
-
-## UUIDv4
-
-exports.UUIDv4 = do ->
-  ranges = [[0, 8], [8, 12], [12, 16], [16, 20], [20, 32]]
-  version = 12
-  variant = 16
-
-  UUIDv4 = ->
-    bytes = crypto.getRandomValues new Uint8Array 32
-
-    digits = (byte % 16 for byte in bytes)
-    digits[version] = 4
-    digits[variant] = 8 + digits[variant] % 4
-
-    hexDigits = (digit.toString 16 for digit in digits)
-
-    sections = (hexDigits.slice(range...).join('') for range in ranges)
-    sections.join('-')
