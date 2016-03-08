@@ -3,30 +3,6 @@
 m = require 'mithril'
 
 
-## KeyCode
-
-exports.KeyCode =
-KeyCode =
-  ENTER: 13
-  ESCAPE: 27
-
-
-## mx
-
-exports.mx =
-mx = (selector, attrs, children) ->
-  for key, transform of extensions
-    if attrs[key]? then transform attrs
-  m selector, attrs, children
-
-extensions =
-  binds: (attrs) ->
-    [handlerName, attrName, getterSetter] = attrs.binds
-    attrs[attrName] = getterSetter()
-    attrs[handlerName] = m.withAttr attrName, getterSetter
-    delete attrs.binds
-
-
 ## bindComponent
 
 exports.bindComponent =

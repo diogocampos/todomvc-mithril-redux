@@ -2,12 +2,13 @@
 
 m = require 'mithril'
 
-{KeyCode, mx} = require '../utils'
+{KeyCode, mx} = require './utils'
 
+
+## TodoItem
 
 module.exports =
 TodoItem =
-
 
   controller: ({todo, onToggle, onRename, onDestroy}) ->
     title = m.prop todo.title

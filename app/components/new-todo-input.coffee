@@ -2,7 +2,7 @@
 
 m = require 'mithril'
 
-{KeyCode, mx} = require '../utils'
+{KeyCode, mx} = require './utils'
 
 
 module.exports =
