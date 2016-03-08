@@ -3,7 +3,7 @@
 m = require 'mithril'
 {bindActionCreators} = require 'redux'
 
-{bindComponent} = require './mithril-redux'
+{bindComponent, connectComponent} = require './mithril-redux'
 
 NewTodoInput = require './components/new-todo-input'
 TodoItem = require './components/todo-item'
@@ -14,7 +14,8 @@ configureStore = require './state/store'
 
 ## Constants
 
-STORE_KEY = 'todos-mithril'
+# TODO: figure out storage
+# STORE_KEY = 'todos-mithril'
 
 FILTERS = [
   { name: 'all'      , href: '/'         , label: 'All'       }
@@ -39,21 +40,18 @@ init = ->
 
 ## Mithril Components
 
-App =
-  controller: ->
+App = connectComponent
+  controller: ({dispatch}) ->
     filter = m.route.param 'filter'
     unless filter in ['active', 'completed']
       m.route '/' if filter
       filter = 'all'
 
-    {filter}
+    ctlr = bindActionCreators actions, dispatch
+    ctlr.filter = filter
+    ctlr
 
-  view: (ctlr, {store}) ->
-    {dispatch, getState} = store
-    {todos} = getState()
-
-    bound = bindActionCreators actions, dispatch
-
+  view: (ctlr, {todos}) ->
     state =
       filter: ctlr.filter
       all: todos: todos
@@ -62,22 +60,25 @@ App =
 
     [
       header title: 'todos',
-        m NewTodoInput, onNew: bound.createTodo
+        m NewTodoInput, onNew: ctlr.createTodo
 
       if state.all.todos.length > 0
         [
           m Main,
             state: state
-            onToggle: bound.toggleTodo
-            onRename: bound.renameTodo
-            onDestroy: bound.destroyTodo
-            onToggleAll: bound.toggleAllTodos
+            onToggle: ctlr.toggleTodo
+            onRename: ctlr.renameTodo
+            onDestroy: ctlr.destroyTodo
+            onToggleAll: ctlr.toggleAllTodos
 
           m Footer,
             state: state
-            onClearCompleted: bound.destroyCompletedTodos
+            onClearCompleted: ctlr.destroyCompletedTodos
         ]
     ]
+
+  (state) ->
+    todos: state.todos
 
 
 header = ({title}, children) ->
