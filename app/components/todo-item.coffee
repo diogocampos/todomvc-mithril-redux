@@ -57,8 +57,14 @@ TodoItem =
         ]
       else
         mx 'input.edit',
-          config: mx.select
+          config: select
           binds: ['oninput', 'value', ctlr.title]
           onblur: ctlr.handleBlur
           onkeydown: ctlr.handleKeydown
     ]
+
+
+## Helpers
+
+select = (element, isInitialized, context) ->
+  element.select() unless isInitialized

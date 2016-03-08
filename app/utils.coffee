@@ -27,12 +27,6 @@ extensions =
     delete attrs.binds
 
 
-## mx.select
-
-mx.select = (element, isInitialized, context) ->
-  element.select() unless isInitialized
-
-
 ## bindComponent
 
 exports.bindComponent =
