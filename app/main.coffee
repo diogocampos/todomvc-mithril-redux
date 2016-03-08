@@ -3,7 +3,7 @@
 m = require 'mithril'
 {bindActionCreators} = require 'redux'
 
-{bindComponent, connectComponent} = require './mithril-redux'
+{bindComponent} = require './mithril-redux'
 
 TodoInput = require './components/todo-input'
 TodoItem = require './components/todo-item'
@@ -30,7 +30,7 @@ init = ->
   rootElement = document.getElementById 'todoapp'
 
   store = configureStore()
-  app = bindComponent App, {store}
+  app = bindComponent App, store
 
   m.route.mode = 'hash'
   m.route rootElement, '/',
@@ -40,18 +40,20 @@ init = ->
 
 ## Mithril Components
 
-App = connectComponent
-  controller: ({dispatch}) ->
+App =
+  controller: (store) ->
     filter = m.route.param 'filter'
     unless filter in ['active', 'completed']
       m.route '/' if filter
       filter = 'all'
 
-    ctlr = bindActionCreators actions, dispatch
+    ctlr = bindActionCreators actions, store.dispatch
     ctlr.filter = filter
     ctlr
 
-  view: (ctlr, {todos}) ->
+  view: (ctlr, store) ->
+    {todos} = store.getState()
+
     state =
       filter: ctlr.filter
       all: todos: todos
@@ -82,9 +84,6 @@ App = connectComponent
         ]
     ]
 
-  (state) ->
-    todos: state.todos
-
 
 header = ({title}, children) ->
   m 'header.header', [
@@ -94,14 +93,15 @@ header = ({title}, children) ->
 
 
 TodoList =
-  view: (ctlr, attrs) ->
+  view: (_, attrs) ->
     {activeCount, count, visibleTodos} = attrs
     {onToggle, onRename, onDestroy, onToggleAll} = attrs
+
 
     m 'section.main', [
       m 'input#toggle-all.toggle-all',
         type: 'checkbox'
-        checked: activeCount is 0 and count > 0
+        checked: count > 0 and activeCount is 0
         onchange: onToggleAll
 
       m 'label', for: 'toggle-all', 'Mark all as complete'
@@ -113,7 +113,7 @@ TodoList =
 
 
 Footer =
-  view: (ctlr, {filter, activeCount, completedCount, onClearCompleted}) ->
+  view: (_, {filter, activeCount, completedCount, onClearCompleted}) ->
     m 'footer.footer', [
       m 'span.todo-count', [
         m 'strong', activeCount
