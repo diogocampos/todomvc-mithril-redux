@@ -2,18 +2,15 @@
 
 {combineReducers} = require 'redux'
 
-filter = require './filter'
-todos = require './todos'
-
-
-{Todo} = todos
+{filterReducer} = require './filter'
+{todosReducer, Todo} = require './todos'
 
 
 ## Reducer
 
 exports.reducer = combineReducers
-  filter: filter.reducer
-  todos: todos.reducer
+  filter: filterReducer
+  todos: todosReducer
 
 
 ## Selectors

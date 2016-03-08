@@ -34,7 +34,7 @@ createTodo = (title, completed) ->
     dispatch addTodo Todo title, completed
 
 
-exports.actions = {
+exports.todosActions = {
   createTodo, toggleTodo, renameTodo, destroyTodo
   toggleAllTodos, destroyCompletedTodos
 }
@@ -47,7 +47,7 @@ initialTodos = (Todo(args...) for args in [
   ['Buy a unicorn', false]
 ])
 
-exports.reducer = (todos = initialTodos, action) ->
+exports.todosReducer = (todos = initialTodos, action) ->
   nextTodos = switch action.type
 
     when 'ADD_TODO'

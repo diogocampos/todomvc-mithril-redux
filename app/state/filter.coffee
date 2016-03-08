@@ -5,7 +5,7 @@
 
 ## Action Creators
 
-exports.actions =
+exports.filterActions =
   setFilter: actionCreator 'SET_FILTER', 'filter'
 
 
@@ -13,7 +13,7 @@ exports.actions =
 
 initialFilter = 'all'
 
-exports.reducer = (filter = initialFilter, action) ->
+exports.filterReducer = (filter = initialFilter, action) ->
   switch action.type
     when 'SET_FILTER' then action.filter
     else filter

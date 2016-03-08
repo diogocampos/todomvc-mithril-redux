@@ -9,8 +9,8 @@ TodoItem = require './components/todo-item'
 
 configureStore = require './state/store'
 s = require './state/root'
-{setFilter} = require('./state/filter').actions
-{actions, Todo} = require './state/todos'
+{filterActions} = require './state/filter'
+{todosActions, Todo} = require './state/todos'
 
 
 ## Constants
@@ -48,8 +48,8 @@ App =
       m.route '/' if filter
       filter = 'all'
 
-    dispatch setFilter filter
-    bindActionCreators actions, dispatch
+    dispatch filterActions.setFilter filter
+    bindActionCreators todosActions, dispatch
 
   view: (ctlr, store) ->
     state = store.getState()
