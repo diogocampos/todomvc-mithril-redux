@@ -8,6 +8,7 @@ TodoItem = require './components/todo-item'
 {bindComponent} = require './components/utils'
 
 configureStore = require './state/store'
+s = require './state/root'
 {setFilter} = require('./state/filter').actions
 {actions, Todo} = require './state/todos'
 
@@ -48,29 +49,21 @@ App =
       filter = 'all'
 
     dispatch setFilter filter
-    ctlr = bindActionCreators actions, dispatch
-    ctlr.filter = filter
-    ctlr
+    bindActionCreators actions, dispatch
 
   view: (ctlr, store) ->
-    {todos} = store.getState()
-
-    state =
-      filter: ctlr.filter
-      all: todos: todos
-      active: todos: todos.filter Todo.isActive
-      completed: todos: todos.filter Todo.isCompleted
+    state = store.getState()
 
     [
       header title: 'todos',
         m TodoInput, onSubmit: ctlr.createTodo
 
-      if state.all.todos.length > 0
+      if s.getTodos(state).length > 0
         [
           m TodoList,
-            activeCount: state.active.todos.count
-            count: state.all.todos.count
-            visibleTodos: state[state.filter].todos
+            activeCount: s.getActiveTodos(state).count
+            count: s.getTodos(state).count
+            visibleTodos: s.getVisibleTodos state
 
             onToggle: ctlr.toggleTodo
             onRename: ctlr.renameTodo
@@ -78,9 +71,9 @@ App =
             onToggleAll: ctlr.toggleAllTodos
 
           m Footer,
-            filter: state.filter
-            activeCount: state.active.todos.length
-            completedCount: state.completed.todos.length
+            filter: s.getFilter state
+            activeCount: s.getActiveTodos(state).length
+            completedCount: s.getCompletedTodos(state).length
             onClearCompleted: ctlr.destroyCompletedTodos
         ]
     ]
