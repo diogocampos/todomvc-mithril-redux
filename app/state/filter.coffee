@@ -1,12 +1,12 @@
 'use strict'
 
-{actionCreator} = require './utils'
+{createAction} = require './utils'
 
 
 ## Action Creators
 
 exports.filterActions =
-  setFilter: actionCreator 'SET_FILTER', 'filter'
+  setFilter: createAction 'SET_FILTER', 'filter'
 
 
 ## Reducer

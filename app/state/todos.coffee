@@ -1,6 +1,6 @@
 'use strict'
 
-{actionCreator, assign, setItem, UUIDv4} = require './utils'
+{createAction, assign, setItem, UUIDv4} = require './utils'
 
 
 ## Models
@@ -15,18 +15,18 @@ Todo.isActive = (todo) ->
   not todo.completed
 
 Todo.isCompleted = (todo) ->
-  !!todo.completed
+  todo.completed
 
 
 ## Action Creators
 
-_addTodo    = actionCreator 'ADD_TODO', 'todo'
-toggleTodo  = actionCreator 'TOGGLE_TODO', 'id'
-renameTodo  = actionCreator 'RENAME_TODO', 'id', 'title'
-destroyTodo = actionCreator 'DESTROY_TODO', 'id'
+_addTodo    = createAction 'ADD_TODO', 'todo'
+toggleTodo  = createAction 'TOGGLE_TODO', 'id'
+renameTodo  = createAction 'RENAME_TODO', 'id', 'title'
+destroyTodo = createAction 'DESTROY_TODO', 'id'
 
-toggleAllTodos        = actionCreator 'TOGGLE_ALL_TODOS'
-destroyCompletedTodos = actionCreator 'DESTROY_COMPLETED_TODOS'
+toggleAllTodos        = createAction 'TOGGLE_ALL_TODOS'
+destroyCompletedTodos = createAction 'DESTROY_COMPLETED_TODOS'
 
 
 createTodo = (title, completed) ->

@@ -3,9 +3,9 @@
 
 module.exports =
 
-  ## actionCreator
+  ## createAction
 
-  actionCreator: (type, keys...) -> (values...) ->
+  createAction: (type, keys...) -> (values...) ->
     action = {type}
     for key, index in keys
       action[key] = values[index]
