@@ -51,23 +51,18 @@ App =
     dispatch filterActions.setFilter filter
     bindActionCreators todosActions, dispatch
 
-  view: (ctlr, store) ->
-    state = store.getState()
+  view: (actions, {getState}) ->
+    state = getState()
+    todos = s.getTodos state
 
     [
       header title: 'todos',
-        m TodoInput, onSubmit: ctlr.createTodo
+        m TodoInput, onSubmit: actions.createTodo
 
-      if s.getTodos(state).length > 0
+      if todos.length > 0
         [
-          m TodoList, store,
-            onToggle: ctlr.toggleTodo
-            onRename: ctlr.renameTodo
-            onDestroy: ctlr.destroyTodo
-            onToggleAll: ctlr.toggleAllTodos
-
-          m Footer, store,
-            onClearCompleted: ctlr.destroyCompletedTodos
+          m TodoList, {state, actions}
+          m Footer, {state, actions}
         ]
     ]
 
@@ -80,9 +75,7 @@ header = ({title}, children) ->
 
 
 TodoList =
-  view: (_, store, {onToggle, onRename, onDestroy, onToggleAll}) ->
-    state = store.getState()
-
+  view: (_, {state, actions}) ->
     allCompleted = s.areAllTodosCompleted state
     visibleTodos = s.getVisibleTodos state
 
@@ -90,20 +83,22 @@ TodoList =
       m 'input#toggle-all.toggle-all',
         type: 'checkbox'
         checked: allCompleted
-        onchange: onToggleAll
+        onchange: actions.toggleAllTodos
 
       m 'label', for: 'toggle-all', 'Mark all as complete'
 
       m 'ul.todo-list',
         for todo in visibleTodos
-          m TodoItem, {todo, onToggle, onRename, onDestroy}
+          m TodoItem,
+            todo: todo
+            onToggle: actions.toggleTodo
+            onRename: actions.renameTodo
+            onDestroy: actions.destroyTodo
     ]
 
 
 Footer =
-  view: (_, store, {onClearCompleted}) ->
-    state = store.getState()
-
+  view: (_, {state, actions}) ->
     currentFilter = s.getFilter state
     activeTodos = s.getActiveTodos state
     completedTodos = s.getCompletedTodos state
@@ -125,7 +120,9 @@ Footer =
           ]
 
       if completedTodos.length > 0
-        m 'button.clear-completed', onclick: onClearCompleted, 'Clear completed'
+        m 'button.clear-completed',
+          onclick: actions.destroyCompletedTodos,
+          'Clear completed'
     ]
 
 
