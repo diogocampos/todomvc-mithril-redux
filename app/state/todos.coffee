@@ -20,7 +20,7 @@ Todo.isCompleted = (todo) ->
 
 ## Action Creators
 
-addTodo     = actionCreator 'ADD_TODO', 'todo'
+_addTodo    = actionCreator 'ADD_TODO', 'todo'
 toggleTodo  = actionCreator 'TOGGLE_TODO', 'id'
 renameTodo  = actionCreator 'RENAME_TODO', 'id', 'title'
 destroyTodo = actionCreator 'DESTROY_TODO', 'id'
@@ -31,7 +31,7 @@ destroyCompletedTodos = actionCreator 'DESTROY_COMPLETED_TODOS'
 
 createTodo = (title, completed) ->
   (dispatch) ->
-    dispatch addTodo Todo title, completed
+    dispatch _addTodo Todo title, completed
 
 
 exports.todosActions = {
