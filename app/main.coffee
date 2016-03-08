@@ -19,9 +19,9 @@ s = require './state/root'
 # STORE_KEY = 'todos-mithril'
 
 FILTERS = [
-  { name: 'all'      , href: '/'         , label: 'All'       }
-  { name: 'active'   , href: '/active'   , label: 'Active'    }
-  { name: 'completed', href: '/completed', label: 'Completed' }
+  { value: 'all'      , href: '/'         , label: 'All'       }
+  { value: 'active'   , href: '/active'   , label: 'Active'    }
+  { value: 'completed', href: '/completed', label: 'Completed' }
 ]
 
 
@@ -111,9 +111,8 @@ footer = ({state, actions}) ->
       for args in FILTERS
         m 'li', [
           m 'a',
-            class: if args.name is currentFilter then 'selected'
-            href: args.href
-            config: m.route
+            class: if args.value is currentFilter then 'selected'
+            href: args.href, config: m.route
             args.label
         ]
 
