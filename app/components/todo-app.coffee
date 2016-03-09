@@ -32,20 +32,20 @@ TodoApp =
       filter = 'all'
 
     dispatch filterActions.setFilter filter
-    bindActionCreators todosActions, dispatch
+    actions: bindActionCreators todosActions, dispatch
 
-  view: (actions, {getState}) ->
+  view: (ctlr, {getState}) ->
     state = getState()
     todos = s.getTodos state
 
     m 'div', [
       header title: 'todos',
-        m TodoInput, onSubmit: actions.createTodo
+        m TodoInput, onSubmit: ctlr.actions.createTodo
 
       if todos.length > 0
         [
-          todoList {state, actions}
-          footer {state, actions}
+          todoList {state, actions: ctlr.actions}
+          footer {state, actions: ctlr.actions}
         ]
     ]
 
