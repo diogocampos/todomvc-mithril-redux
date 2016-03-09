@@ -5,21 +5,17 @@ m = require 'mithril'
 
 module.exports =
 
-  ## bindComponent
-
-  bindComponent: (component, attrs, children) ->
-    bound =
-      view: (ctlr) -> component.view ctlr, attrs, children
-    if component.controller
-      bound.controller = -> new component.controller attrs, children
-    bound
-
-
   ## KeyCode
 
   KeyCode:
     ENTER: 13
     ESCAPE: 27
+
+
+  ## bindComponent
+
+  bindComponent: (component, attrs, children) ->
+    view: -> m component, attrs, children
 
 
   ## mx

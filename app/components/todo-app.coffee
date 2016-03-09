@@ -38,7 +38,7 @@ TodoApp =
     state = getState()
     todos = s.getTodos state
 
-    [
+    m 'div', [
       header title: 'todos',
         m TodoInput, onSubmit: actions.createTodo
 
