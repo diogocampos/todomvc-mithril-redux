@@ -13,6 +13,13 @@ exports.reducer = combineReducers
   todos: todosReducer
 
 
+## configureState
+
+exports.configureState = ({todos}) ->
+  filter: filterReducer null, {}
+  todos: todosReducer todos, {}
+
+
 ## Selectors
 
 # TODO use reselect: https://github.com/reactjs/reselect
