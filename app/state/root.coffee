@@ -17,41 +17,37 @@ exports.reducer = combineReducers
 
 # TODO use reselect: https://github.com/reactjs/reselect
 
-exports.getFilter =
-getFilter = (state) ->
-  state.filter
+exports.selectors = s =
+
+  getFilter: (state) ->
+    state.filter
 
 
-exports.getTodos =
-getTodos = (state) ->
-  state.todos
+  getTodos: (state) ->
+    state.todos
 
 
-exports.getActiveTodos =
-getActiveTodos = (state) ->
-  todos = getTodos state
-  todos.filter Todo.isActive
+  getActiveTodos: (state) ->
+    todos = s.getTodos state
+    todos.filter Todo.isActive
 
 
-exports.getCompletedTodos =
-getCompletedTodos = (state) ->
-  todos = getTodos state
-  todos.filter Todo.isCompleted
+  getCompletedTodos: (state) ->
+    todos = s.getTodos state
+    todos.filter Todo.isCompleted
 
 
-exports.getVisibleTodos =
-getVisibleTodos = (state) ->
-  filter = getFilter state
+  getVisibleTodos: (state) ->
+    filter = s.getFilter state
 
-  switch filter
-    when 'all' then getTodos state
-    when 'active' then getActiveTodos state
-    when 'completed' then getCompletedTodos state
+    switch filter
+      when 'all' then s.getTodos state
+      when 'active' then s.getActiveTodos state
+      when 'completed' then s.getCompletedTodos state
 
 
-exports.areAllTodosCompleted =
-areAllTodosCompleted = (state) ->
-  todos = getTodos state
-  activeTodos = getActiveTodos state
+  areAllTodosCompleted: (state) ->
+    todos = s.getTodos state
+    activeTodos = s.getActiveTodos state
 
-  todos.length > 0 and activeTodos.length is 0
+    todos.length > 0 and activeTodos.length is 0

@@ -6,7 +6,7 @@ m = require 'mithril'
 TodoInput = require './todo-input'
 TodoItem = require './todo-item'
 
-s = require '../state/root'
+s = require('../state/root').selectors
 {filterActions} = require '../state/filter'
 {todosActions} = require '../state/todos'
 
