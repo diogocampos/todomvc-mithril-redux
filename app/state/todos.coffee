@@ -1,6 +1,6 @@
 'use strict'
 
-{createAction, assign, setItem, UUIDv4} = require './utils'
+{createAction, setItem, setProperties, UUIDv4} = require './utils'
 {$saves} = require './storage'
 
 
@@ -57,13 +57,13 @@ exports.todosReducer = (todos = initialTodos, action) ->
     when 'TOGGLE_TODO'
       [todo, index] = findTodoById todos, action.id
       if todo
-        todo = assign todo, completed: not todo.completed
+        todo = setProperties todo, completed: not todo.completed
         setItem todos, index, todo
 
     when 'RENAME_TODO'
       [todo, index] = findTodoById todos, action.id
       if todo
-        todo = assign todo, title: action.title
+        todo = setProperties todo, title: action.title
         setItem todos, index, todo
 
     when 'DESTROY_TODO'
@@ -71,7 +71,7 @@ exports.todosReducer = (todos = initialTodos, action) ->
 
     when 'TOGGLE_ALL_TODOS'
       hasActiveTodos = todos.filter(Todo.isActive).length > 0
-      todos.map (todo) -> assign todo, completed: hasActiveTodos
+      todos.map (todo) -> setProperties todo, completed: hasActiveTodos
 
     when 'DESTROY_COMPLETED_TODOS'
       todos.filter Todo.isActive

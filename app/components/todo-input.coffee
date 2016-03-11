@@ -18,6 +18,7 @@ TodoInput =
           onSubmit newTitle
           title ''
 
+
   view: (ctlr) ->
     mx 'input.new-todo',
       placeholder: 'What needs to be done?'

@@ -12,9 +12,17 @@ module.exports =
     action
 
 
-  ## assign
+  ## setItem
 
-  assign: (object, key, value) ->
+  setItem: (array, index, value) ->
+    array = array.slice()
+    array[index] = value
+    array
+
+
+  ## setProperties
+
+  setProperties: (object, key, value) ->
     if value?
       # (object, string, any)
       properties = {}
@@ -24,14 +32,6 @@ module.exports =
       properties = key
 
     Object.assign {}, object, properties
-
-
-  ## setItem
-
-  setItem: (array, index, value) ->
-    array = array.slice()
-    array[index] = value
-    array
 
 
   ## UUIDv4

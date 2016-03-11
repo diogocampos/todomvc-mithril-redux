@@ -34,6 +34,7 @@ TodoApp =
     dispatch filterActions.setFilter filter
     actions: bindActionCreators todosActions, dispatch
 
+
   view: (ctlr, {getState}) ->
     state = getState()
     todos = s.getTodos state
