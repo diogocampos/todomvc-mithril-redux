@@ -1,7 +1,7 @@
 'use strict'
 
 m = require 'mithril'
-{bindActionCreators} = require 'redux'
+{bindActionCreators} = require '../redux'
 
 TodoInput = require './todo-input'
 TodoItem = require './todo-item'

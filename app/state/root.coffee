@@ -1,6 +1,6 @@
 'use strict'
 
-{combineReducers} = require 'redux'
+{combineReducers} = require '../redux'
 {createSelector} = require 'reselect'
 
 {filterReducer} = require './filter'

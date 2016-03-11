@@ -1,6 +1,6 @@
 'use strict'
 
-{applyMiddleware, createStore} = require 'redux'
+{applyMiddleware, createStore} = require '../redux'
 thunk = require('redux-thunk').default
 
 root = require './root'
