@@ -1,27 +1,41 @@
 'use strict'
 
 
-identity = (state) -> state
+DEFAULT_KEY = 'redux-state'
 
-$SAVE = {}
-
-
-module.exports =
-
-  middleware: ({storage = localStorage, key, selector = identity}) ->
-    ({dispatch, getState}) -> (next) -> (action) ->
-      if action is $SAVE
-        try
-          data = JSON.stringify selector getState()
-          storage.setItem key, data
-        catch err
-          console.error "Can't save", err
-      else
-        next action
+identity = (x) -> x
 
 
-  $saves: (actionCreator) -> (args...) ->
-    (dispatch) ->
-      result = dispatch actionCreator(args...)
-      dispatch $SAVE
-      result
+exports.attachStorage = (options) ->
+  { storage = localStorage
+    key = DEFAULT_KEY
+    fromStorage = identity
+    toStorage = identity
+  } = options
+
+  (nextStoreCreator) -> (reducer, defaultState) ->
+    # Load:  state = fromStorage JSON.parse storage.getItem key
+    # Save:  storage.setItem key, JSON.stringify toStorage state
+
+    json = storage.getItem key
+    initialState = if json? \
+      then fromStorage JSON.parse json
+      else defaultState
+
+    store = nextStoreCreator reducer, initialState
+    lastValue = if json? \
+      then toStorage initialState
+      else null
+
+    saveIfChanged = ->
+      value = toStorage store.getState()
+      return if value is lastValue
+      lastValue = value
+
+      try
+        storage.setItem key, JSON.stringify value
+      catch err
+        console.error "Can't save", err
+
+    store.subscribe saveIfChanged
+    store

@@ -4,7 +4,7 @@ m = require 'mithril'
 
 TodoApp = require './components/todo-app'
 {bindComponent} = require './components/utils'
-configureStore = require './state/store'
+{configureStore} = require './state/store'
 
 
 store = configureStore()

@@ -1,7 +1,6 @@
 'use strict'
 
 {createAction, setItem, setProperties, UUIDv4} = require './utils'
-{$saves} = require './storage'
 
 
 ## Models
@@ -21,13 +20,13 @@ Todo.isCompleted = (todo) ->
 
 ## Action Creators
 
-_addTodo    = $saves createAction 'ADD_TODO', 'todo'
-toggleTodo  = $saves createAction 'TOGGLE_TODO', 'id'
-renameTodo  = $saves createAction 'RENAME_TODO', 'id', 'title'
-destroyTodo = $saves createAction 'DESTROY_TODO', 'id'
+_addTodo    = createAction 'ADD_TODO', 'todo'
+toggleTodo  = createAction 'TOGGLE_TODO', 'id'
+renameTodo  = createAction 'RENAME_TODO', 'id', 'title'
+destroyTodo = createAction 'DESTROY_TODO', 'id'
 
-toggleAllTodos        = $saves createAction 'TOGGLE_ALL_TODOS'
-destroyCompletedTodos = $saves createAction 'DESTROY_COMPLETED_TODOS'
+toggleAllTodos        = createAction 'TOGGLE_ALL_TODOS'
+destroyCompletedTodos = createAction 'DESTROY_COMPLETED_TODOS'
 
 
 createTodo = (title, completed) ->

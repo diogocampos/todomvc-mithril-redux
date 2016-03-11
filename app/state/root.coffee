@@ -17,7 +17,7 @@ exports.reducer = combineReducers
 ## configureState
 
 exports.configureState = ({todos}) ->
-  filter: filterReducer null, {}
+  filter: filterReducer undefined, {}
   todos: todosReducer todos, {}
 
 

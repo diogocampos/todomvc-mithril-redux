@@ -1,29 +1,20 @@
 'use strict'
 
-{applyMiddleware, createStore} = require '../redux'
+{applyMiddleware, compose, createStore} = require '../redux'
 thunk = require('redux-thunk').default
 
 root = require './root'
-storage = require './storage'
+{attachStorage} = require './storage'
 
 
-## Constants
+exports.configureStore = ->
+  defaultState = root.reducer undefined, {}
 
-STORAGE_KEY = 'todos-mithril-redux'
+  createStore root.reducer, defaultState, compose(
+    attachStorage
+      key: 'todos-mithril-redux'
+      fromStorage: (todos) -> root.configureState {todos}
+      toStorage: root.selectors.getTodos
 
-
-## configureStore
-
-module.exports = (initialState) ->
-  initialState = root.configureState
-    todos: JSON.parse localStorage.getItem(STORAGE_KEY) or 'null'
-
-  middlewares = [
-    storage.middleware
-      key: STORAGE_KEY
-      selector: root.selectors.getTodos
-
-    thunk
-  ]
-
-  createStore root.reducer, initialState, applyMiddleware(middlewares...)
+    applyMiddleware thunk
+  )
