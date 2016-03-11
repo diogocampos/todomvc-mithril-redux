@@ -1,6 +1,7 @@
 'use strict'
 
 {combineReducers} = require 'redux'
+{createSelector} = require 'reselect'
 
 {filterReducer} = require './filter'
 {todosReducer, Todo} = require './todos'
@@ -22,39 +23,35 @@ exports.configureState = ({todos}) ->
 
 ## Selectors
 
-# TODO use reselect: https://github.com/reactjs/reselect
-
-exports.selectors = s =
-
-  getFilter: (state) ->
-    state.filter
+exports.selectors = s = {}
 
 
-  getTodos: (state) ->
-    state.todos
+s.getFilter = (state) ->
+  state.filter
 
 
-  getActiveTodos: (state) ->
-    todos = s.getTodos state
+s.getTodos = (state) ->
+  state.todos
+
+
+s.getActiveTodos = createSelector [s.getTodos],
+  _getActiveTodos = (todos) ->
     todos.filter Todo.isActive
 
 
-  getCompletedTodos: (state) ->
-    todos = s.getTodos state
+s.getCompletedTodos = createSelector [s.getTodos],
+  _getCompletedTodos = (todos) ->
     todos.filter Todo.isCompleted
 
 
-  getVisibleTodos: (state) ->
-    filter = s.getFilter state
-
+s.getVisibleTodos = createSelector [s.getFilter, s.getTodos],
+  (filter, todos) ->
     switch filter
-      when 'all' then s.getTodos state
-      when 'active' then s.getActiveTodos state
-      when 'completed' then s.getCompletedTodos state
+      when 'all' then todos
+      when 'active' then _getActiveTodos todos
+      when 'completed' then _getCompletedTodos todos
 
 
-  areAllTodosCompleted: (state) ->
-    todos = s.getTodos state
-    activeTodos = s.getActiveTodos state
-
+s.areAllTodosCompleted = createSelector [s.getTodos, s.getActiveTodos],
+  (todos, activeTodos) ->
     todos.length > 0 and activeTodos.length is 0
