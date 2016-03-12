@@ -1,10 +1,9 @@
 'use strict'
 
 {combineReducers} = require '../redux'
-{createSelector} = require 'reselect'
 
-{filterReducer} = require './filter'
-{todosReducer, Todo} = require './todos'
+{filterReducer, filterSelectors} = require './filter'
+{todosReducer, todosSelectors} = require './todos'
 
 
 ## Reducer
@@ -25,24 +24,19 @@ exports.configureState = ({todos}) ->
 
 exports.selectors = s = {}
 
-
 s.getFilter = (state) ->
-  state.filter
-
+  filterSelectors.getFilter state.filter
 
 s.getTodos = (state) ->
-  state.todos
+  todosSelectors.getTodos state.todos
 
+s.getActiveTodos = (state) ->
+  todos = s.getTodos state
+  todosSelectors.getActiveTodos todos
 
-s.getActiveTodos = createSelector [s.getTodos],
-  (todos) ->
-    todos.filter Todo.isActive
-
-
-s.getCompletedTodos = createSelector [s.getTodos],
-  (todos) ->
-    todos.filter Todo.isCompleted
-
+s.getCompletedTodos = (state) ->
+  todos = s.getTodos state
+  todosSelectors.getCompletedTodos todos
 
 s.getVisibleTodos = (state) ->
   switch s.getFilter state
@@ -50,7 +44,6 @@ s.getVisibleTodos = (state) ->
     when 'active' then s.getActiveTodos state
     when 'completed' then s.getCompletedTodos state
 
-
-s.areAllTodosCompleted = createSelector [s.getTodos, s.getActiveTodos],
-  (todos, activeTodos) ->
-    todos.length > 0 and activeTodos.length is 0
+s.hasActiveTodos = (state) ->
+  todos = s.getTodos state
+  todosSelectors.hasActiveTodos todos

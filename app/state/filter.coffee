@@ -17,3 +17,9 @@ exports.filterReducer = (filter = initialFilter, action) ->
   switch action.type
     when 'SET_FILTER' then action.filter
     else filter
+
+
+## Selectors
+
+exports.filterSelectors =
+  getFilter: (filter) -> filter

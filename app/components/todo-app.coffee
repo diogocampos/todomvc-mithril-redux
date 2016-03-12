@@ -63,13 +63,13 @@ header = ({title}, children) ->
 ## todoList
 
 todoList = ({state, actions}) ->
-  allCompleted = s.areAllTodosCompleted state
+  hasActiveTodos = s.hasActiveTodos state
   visibleTodos = s.getVisibleTodos state
 
   m 'section.main', [
     m 'input#toggle-all.toggle-all',
       type: 'checkbox'
-      checked: allCompleted
+      checked: not hasActiveTodos
       onchange: actions.toggleAllTodos
 
     m 'label', for: 'toggle-all', 'Mark all as complete'

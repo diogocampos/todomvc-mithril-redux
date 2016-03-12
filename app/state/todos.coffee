@@ -1,5 +1,7 @@
 'use strict'
 
+{createSelector} = require 'reselect'
+
 {createAction, setItem, setProperties, UUIDv4} = require './utils'
 
 
@@ -69,11 +71,11 @@ exports.todosReducer = (todos = initialTodos, action) ->
       todos.filter (todo) -> todo.id isnt action.id
 
     when 'TOGGLE_ALL_TODOS'
-      hasActiveTodos = todos.filter(Todo.isActive).length > 0
+      hasActiveTodos = s.hasActiveTodos todos
       todos.map (todo) -> setProperties todo, completed: hasActiveTodos
 
     when 'DESTROY_COMPLETED_TODOS'
-      todos.filter Todo.isActive
+      s.getActiveTodos todos
 
   nextTodos or todos
 
@@ -82,3 +84,22 @@ findTodoById = (todos, id) ->
   for todo, index in todos
     return [todo, index] if todo.id is id
   [null, -1]
+
+
+## Selectors
+
+exports.todosSelectors = s = {}
+
+s.getTodos = (todos) -> todos
+
+s.getActiveTodos = createSelector [s.getTodos],
+  (todos) ->
+    todos.filter Todo.isActive
+
+s.getCompletedTodos = createSelector [s.getTodos],
+  (todos) ->
+    todos.filter Todo.isCompleted
+
+s.hasActiveTodos = (todos) ->
+  activeTodos = s.getActiveTodos todos
+  activeTodos.length > 0
