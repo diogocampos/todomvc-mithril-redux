@@ -35,21 +35,20 @@ s.getTodos = (state) ->
 
 
 s.getActiveTodos = createSelector [s.getTodos],
-  _getActiveTodos = (todos) ->
+  (todos) ->
     todos.filter Todo.isActive
 
 
 s.getCompletedTodos = createSelector [s.getTodos],
-  _getCompletedTodos = (todos) ->
+  (todos) ->
     todos.filter Todo.isCompleted
 
 
-s.getVisibleTodos = createSelector [s.getFilter, s.getTodos],
-  (filter, todos) ->
-    switch filter
-      when 'all' then todos
-      when 'active' then _getActiveTodos todos
-      when 'completed' then _getCompletedTodos todos
+s.getVisibleTodos = (state) ->
+  switch s.getFilter state
+    when 'all' then s.getTodos state
+    when 'active' then s.getActiveTodos state
+    when 'completed' then s.getCompletedTodos state
 
 
 s.areAllTodosCompleted = createSelector [s.getTodos, s.getActiveTodos],
