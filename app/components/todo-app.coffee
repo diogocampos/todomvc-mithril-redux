@@ -13,11 +13,10 @@ s = require('../state/root').selectors
 
 ## Constants
 
-FILTERS = [
-  { value: 'all'      , href: '/'         , label: 'All'       }
-  { value: 'active'   , href: '/active'   , label: 'Active'    }
-  { value: 'completed', href: '/completed', label: 'Completed' }
-]
+FILTERS =
+  'all':       path: '/'         , label: 'All'
+  'active':    path: '/active'   , label: 'Active'
+  'completed': path: '/completed', label: 'Completed'
 
 
 ## TodoApp
@@ -98,11 +97,11 @@ footer = ({state, actions}) ->
     ]
 
     m 'ul.filters',
-      for args in FILTERS
+      for filter, args of FILTERS
         m 'li', [
           m 'a',
-            class: if args.value is currentFilter then 'selected'
-            href: args.href, config: m.route
+            class: if filter is currentFilter then 'selected'
+            href: args.path, config: m.route
             args.label
         ]
 
