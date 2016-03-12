@@ -63,19 +63,22 @@ exports.todosReducer = (todos = initialTodos, action) ->
 
     when 'RENAME_TODO'
       [todo, index] = findTodoById todos, action.id
-      if todo
+      if todo and action.title isnt todo.title
         todo = setProperties todo, title: action.title
         setItem todos, index, todo
 
     when 'DESTROY_TODO'
-      todos.filter (todo) -> todo.id isnt action.id
+      updated = todos.filter (todo) -> todo.id isnt action.id
+      updated if updated.length < todos.length
 
     when 'TOGGLE_ALL_TODOS'
-      hasActiveTodos = s.hasActiveTodos todos
-      todos.map (todo) -> setProperties todo, completed: hasActiveTodos
+      if todos.length > 0
+        hasActiveTodos = s.hasActiveTodos todos
+        todos.map (todo) -> setProperties todo, completed: hasActiveTodos
 
     when 'DESTROY_COMPLETED_TODOS'
-      s.getActiveTodos todos
+      activeTodos = s.getActiveTodos todos
+      activeTodos if activeTodos.length < todos.length
 
   nextTodos or todos
 
