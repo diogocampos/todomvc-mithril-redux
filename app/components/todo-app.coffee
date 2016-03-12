@@ -5,6 +5,7 @@ m = require 'mithril'
 
 TodoInput = require './todo-input'
 TodoItem = require './todo-item'
+{createComponent} = require './utils'
 
 s = require('../state/root').selectors
 {filterActions} = require '../state/filter'
@@ -22,30 +23,30 @@ FILTERS =
 ## TodoApp
 
 module.exports =
-TodoApp =
+createComponent class TodoApp
 
-  controller: ({dispatch}) ->
+  constructor: (@attrs) ->
     filter = m.route.param 'filter'
     unless filter in ['active', 'completed']
       m.route '/' if filter
       filter = 'all'
 
-    dispatch filterActions.setFilter filter
-    actions: bindActionCreators todosActions, dispatch
+    @attrs.dispatch filterActions.setFilter filter
+    @actions = bindActionCreators todosActions, @attrs.dispatch
 
 
-  view: (ctlr, {getState}) ->
-    state = getState()
+  render: ->
+    state = @attrs.getState()
     todos = s.getTodos state
 
     m 'div', [
       header title: 'todos',
-        m TodoInput, onSubmit: ctlr.actions.createTodo
+        m TodoInput, onSubmit: @actions.createTodo
 
       if todos.length > 0
         [
-          todoList {state, actions: ctlr.actions}
-          footer {state, actions: ctlr.actions}
+          todoList {state, @actions}
+          footer {state, @actions}
         ]
     ]
 

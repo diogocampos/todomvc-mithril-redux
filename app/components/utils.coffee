@@ -18,6 +18,25 @@ module.exports =
     view: -> m component, attrs, children
 
 
+  ## createComponent
+
+  createComponent: do ->
+    bindHandlers = (obj) ->
+      for key, handler of obj
+        if key.indexOf('handle') is 0 and typeof handler is 'function'
+          obj[key] = handler.bind obj
+      obj
+
+    createComponent = (cls) ->
+      controller: (attrs, children) ->
+        cls::setAttrs or= (@attrs, @children) -> #
+        bindHandlers new cls attrs, children
+
+      view: (ctlr, attrs, children) ->
+        ctlr.setAttrs attrs, children
+        ctlr.render()
+
+
   ## mx
 
   mx: do ->
