@@ -3,8 +3,13 @@ exports.config =
     watched: ['app', 'assets']
 
   files:
-    javascripts: joinTo: 'app.js'
-    stylesheets: joinTo: 'app.css'
+    javascripts:
+      joinTo:
+        'app.js': /^app/
+        'vendor.js': /^(?!app)/
+
+    stylesheets:
+      joinTo: 'vendor.css'
 
   modules:
     autoRequire:
