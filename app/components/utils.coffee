@@ -12,12 +12,6 @@ module.exports =
     ESCAPE: 27
 
 
-  ## bindComponent
-
-  bindComponent: (component, attrs, children) ->
-    view: -> m component, attrs, children
-
-
   ## createComponent
 
   createComponent: do ->
