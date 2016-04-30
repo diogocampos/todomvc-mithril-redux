@@ -11,7 +11,7 @@ createComponent class TodoInput
   constructor: (@attrs) ->
     @title = m.prop ''
 
-  handleKeydown: (event) ->
+  handleKeydown: (event) =>
     if event.keyCode is KeyCode.ENTER
       if newTitle = @title().trim()
         @attrs.onSubmit newTitle

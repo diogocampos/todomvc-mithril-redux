@@ -14,16 +14,16 @@ createComponent class TodoItem
     @title = m.prop ''
     @editing = m.prop false
 
-  handleToggle: -> @attrs.onToggle @attrs.todo.id
-  handleDestroy: -> @attrs.onDestroy @attrs.todo.id
+  handleToggle: => @attrs.onToggle @attrs.todo.id
+  handleDestroy: => @attrs.onDestroy @attrs.todo.id
 
-  handleDblclick: ->
+  handleDblclick: =>
     @title @attrs.todo.title
     @editing true
 
-  handleBlur: -> @commitChanges()
+  handleBlur: => @commitChanges()
 
-  handleKeydown: (event) ->
+  handleKeydown: (event) =>
     switch event.keyCode
       when KeyCode.ENTER then @commitChanges()
       when KeyCode.ESCAPE then @discardChanges()
