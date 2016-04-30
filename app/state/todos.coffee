@@ -11,7 +11,7 @@ exports.Todo =
 Todo = (title, completed) ->
   id: UUIDv4()
   title: title
-  completed: completed ? false
+  completed: if completed? then !!completed else false
 
 Todo.isActive = (todo) ->
   not todo.completed
@@ -22,24 +22,19 @@ Todo.isCompleted = (todo) ->
 
 ## Action Creators
 
-_addTodo    = createAction 'ADD_TODO', 'todo'
-toggleTodo  = createAction 'TOGGLE_TODO', 'id'
-renameTodo  = createAction 'RENAME_TODO', 'id', 'title'
-destroyTodo = createAction 'DESTROY_TODO', 'id'
+exports.todosActions =
 
-toggleAllTodos        = createAction 'TOGGLE_ALL_TODOS'
-destroyCompletedTodos = createAction 'DESTROY_COMPLETED_TODOS'
+  createTodo: do ->
+    addTodo = createAction 'ADD_TODO', 'todo'
+    (title, completed) -> (dispatch) ->
+      dispatch addTodo Todo title, completed
 
+  toggleTodo: createAction 'TOGGLE_TODO', 'id'
+  renameTodo: createAction 'RENAME_TODO', 'id', 'title'
+  destroyTodo: createAction 'DESTROY_TODO', 'id'
 
-createTodo = (title, completed) ->
-  (dispatch) ->
-    dispatch _addTodo Todo title, completed
-
-
-exports.todosActions = {
-  createTodo, toggleTodo, renameTodo, destroyTodo
-  toggleAllTodos, destroyCompletedTodos
-}
+  toggleAllTodos: createAction 'TOGGLE_ALL_TODOS'
+  destroyCompletedTodos: createAction 'DESTROY_COMPLETED_TODOS'
 
 
 ## Reducer
