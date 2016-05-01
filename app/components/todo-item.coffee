@@ -10,50 +10,52 @@ m = require 'mithril'
 module.exports =
 createComponent class TodoItem
 
-  constructor: (@attrs) ->
+  constructor: ({@todo, @onToggle, @onRename, @onDestroy}) ->
     @title = m.prop ''
     @editing = m.prop false
 
-  handleToggle: => @attrs.onToggle @attrs.todo.id
-  handleDestroy: => @attrs.onDestroy @attrs.todo.id
+
+  handleToggle: => @onToggle @todo.id
+  handleDestroy: => @onDestroy @todo.id
 
   handleDblclick: =>
-    @title @attrs.todo.title
+    @title @todo.title
     @editing true
-
-  handleBlur: => @commitChanges()
 
   handleKeydown: (event) =>
     switch event.keyCode
       when KeyCode.ENTER then @commitChanges()
       when KeyCode.ESCAPE then @discardChanges()
 
+  handleBlur: => @commitChanges()
+
+
   commitChanges: ->
     @editing false
     if newTitle = @title().trim()
-      unless newTitle is @attrs.todo.title
-        @attrs.onRename @attrs.todo.id, newTitle
+      unless newTitle is @todo.title
+        @onRename @todo.id, newTitle
     else
-      @attrs.onDestroy @attrs.todo.id
+      @onDestroy @todo.id
 
   discardChanges: ->
-    @title @attrs.todo.title
+    @title @todo.title
     @editing false
 
 
-  render: ->
+  render: ({@todo, @onToggle, @onRename, @onDestroy}) ->
     classes = ''
     classes += '.editing' if @editing()
-    classes += '.completed' if @attrs.todo.completed
+    classes += '.completed' if @todo.completed
 
-    m "li#{classes}", key: @attrs.todo.id, [
+    m "li#{classes}", key: @todo.id, [
       if not @editing()
         m 'div.view', [
           m 'input.toggle',
             type: 'checkbox'
-            checked: @attrs.todo.completed
+            checked: @todo.completed
             onchange: @handleToggle
-          m 'label', ondblclick: @handleDblclick, @attrs.todo.title
+          m 'label', ondblclick: @handleDblclick, @todo.title
           m 'button.destroy', onclick: @handleDestroy
         ]
       else

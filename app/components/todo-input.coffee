@@ -8,17 +8,17 @@ m = require 'mithril'
 module.exports =
 createComponent class TodoInput
 
-  constructor: (@attrs) ->
+  constructor: ({@onSubmit}) ->
     @title = m.prop ''
 
   handleKeydown: (event) =>
     if event.keyCode is KeyCode.ENTER
       if newTitle = @title().trim()
-        @attrs.onSubmit newTitle
+        @onSubmit newTitle
         @title ''
 
 
-  render: ->
+  render: ({@onSubmit}) ->
     mx 'input.new-todo',
       placeholder: 'What needs to be done?'
       autofocus: true

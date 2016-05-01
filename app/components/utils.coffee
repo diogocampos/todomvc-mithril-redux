@@ -17,12 +17,10 @@ module.exports =
   createComponent: do ->
     createComponent = (cls) ->
       controller: (attrs, children) ->
-        cls::setAttrs or= (@attrs, @children) -> # no-op
         new cls attrs, children
 
       view: (ctlr, attrs, children) ->
-        ctlr.setAttrs attrs, children
-        ctlr.render()
+        ctlr.render attrs, children
 
 
   ## mx

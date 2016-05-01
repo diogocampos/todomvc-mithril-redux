@@ -25,29 +25,28 @@ FILTERS =
 module.exports =
 createComponent class TodoApp
 
-  constructor: (@attrs) ->
+  constructor: ({dispatch}) ->
     filter = m.route.param 'filter'
     unless filter in ['active', 'completed']
       m.route '/' if filter
       filter = 'all'
 
-    @attrs.dispatch filterActions.setFilter filter
-    @actions = bindActionCreators todosActions, @attrs.dispatch
+    dispatch filterActions.setFilter filter
+    @actions = bindActionCreators todosActions, dispatch
 
 
-  render: ->
-    state = @attrs.getState()
+  render: ({getState}) ->
+    state = getState()
     todos = s.getTodos state
 
     m 'div', [
       header title: 'todos',
         m TodoInput, onSubmit: @actions.createTodo
 
-      if todos.length > 0
-        [
-          todoList {state, @actions}
-          footer {state, @actions}
-        ]
+      if todos.length > 0 then [
+        todoList {state, @actions}
+        footer {state, @actions}
+      ]
     ]
 
 
